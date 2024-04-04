@@ -24,7 +24,58 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Projeto criado com o intuito de aperfeiçoar os meus conhecimentos com rest API.
+Trata-se de um rest API que realiza uma requisição ao projeto https://pokeapi.co/api/v2 e trata os dados retornados.
+Retornando apenas os dados necessários para a aplicação.
+
+## request
+Cria uma Conta de usuário simples
+É necessário alterar manualmente no Banco de dados
+o campo role para'admin' para ter acesso a rota
+de criação de pokemons
+```bash
+http://localhost:3001/auth/signup - POST 
+
+    {
+	  "name": "USER",
+	  "email": "user@gmail.com",
+	  "password": "123456",
+	  "passwordConfirmation": "123456"
+    }
+    
+
+```
+Realiza o login do usuário
+Essa requisição gera um token JWT, necessário para
+acessar as demais rotas
+```bash
+http://localhost:3001/auth/signin - POST
+
+{
+ "email": "admin@gmail.com",
+ "password": "123456"
+}  
+
+
+```
+
+Salva no banco de dados os dados basicos da lista de pokemons que vem da api e retorna somente o name, url e order.
+```bash
+http://localhost:3001/pokemons/generate - GET
+```
+
+Retorna do Banco de dados a lista de pokemons salvos paginado, se o limit for menor que 10, o request, atualiza os dados
+mais informações
+```bash
+http://localhost:3001/pokemons?page=1&limit=10 - GET
+```
+
+Retorna Somente um pokemon pelo nome
+```bash
+http://localhost:3001/pokemons/bulbasaur
+```
+
+No Arquivo insomnia tem as requisições prontas para serem importadas no insomnia
 
 ## Installation
 
@@ -57,16 +108,6 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 

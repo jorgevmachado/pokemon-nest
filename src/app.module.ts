@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from './config/typeorm.config';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { typeOrmConfig } from '@config/typeorm.config';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './config/winston.config';
+import { winstonConfig } from '@config/winston.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
+import { PokemonModule } from './modules/pokemon/pokemon.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
     WinstonModule.forRoot(winstonConfig),
     UsersModule,
     AuthModule,
+    PokemonModule,
   ],
   controllers: [],
   providers: [

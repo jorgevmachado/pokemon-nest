@@ -10,6 +10,8 @@ export class RolesGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
+    // TODO: WARNING => REMEMBER TO REMOVE LATER
+    console.log('\x1b[33m' + '# => request => ' + request + '\x1b[0m');
     const userRole = request.user.role;
     const requiredRole = this.reflector.get<string>(
       'role',
