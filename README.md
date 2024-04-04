@@ -28,7 +28,13 @@ Projeto criado com o intuito de aperfeiçoar os meus conhecimentos com rest API.
 Trata-se de um rest API que realiza uma requisição ao projeto https://pokeapi.co/api/v2 e trata os dados retornados.
 Retornando apenas os dados necessários para a aplicação.
 
-## request
+
+## Data Base
+O banco de dados utilizado foi o Postgres, para rodar o projeto é necessário criar um banco de dados com o nome de 'Pokémon' e alterar o arquivo ormconfig.json
+com as credenciais do seu banco de dados. Ou utilizar o Docker-compose que está no arquivo, ele irá gerar um container
+Docker com o banco de dados postgres já pronto com as mesmas credenciais.
+
+## Request
 Cria uma Conta de usuário simples
 É necessário alterar manualmente no Banco de dados
 o campo role para'admin' para ter acesso a rota
