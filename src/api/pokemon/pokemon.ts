@@ -3,7 +3,10 @@ import { generateOrder } from '@services/string';
 
 import type { IResponsePaginate } from '@api/interfaces';
 import * as dto from '@api/pokemon/interfaces';
-import { IResponsePokemon } from '@api/pokemon/interfaces';
+import {
+  IResponsePokemon,
+  IResponsePokemonBase,
+} from '@api/pokemon/interfaces';
 
 type Tlist =
   | IResponsePokemon['types']
@@ -25,7 +28,7 @@ export class PokemonApi extends Http {
   ): Promise<IResponsePaginate<dto.IResponsePokemonBase>> {
     try {
       const response: IResponsePaginate<dto.IResponsePokemonBase> =
-        await this.get(`/pokemon?offset=${offset}&limit=${limit}`, {});
+        await this.get(`/pokemon`, { offset: offset, limit: limit });
       const results: Array<dto.IResponsePokemonBase> = response.results;
       return {
         ...response,
@@ -63,6 +66,7 @@ export class PokemonApi extends Http {
       return await this.get(`/pokemon-species/${name}`, {});
     } catch (error) {
       console.error(`# api => specieByName => error => ${name}`, error);
+      return this.defaultResponse(name);
     }
   }
 
@@ -77,5 +81,43 @@ export class PokemonApi extends Http {
       };
       return item;
     });
+  }
+
+  private defaultResponse(name: string): dto.IResponseSpecie {
+    const responseBase: IResponsePokemonBase = {
+      url: 'url',
+      name: name,
+      order: 0,
+    };
+    return {
+      id: responseBase.order,
+      name: responseBase.name,
+      color: {
+        name: responseBase.name,
+        order: responseBase.order,
+      },
+      order: responseBase.order,
+      shape: responseBase,
+      habitat: {
+        name: responseBase.name,
+        order: responseBase.order,
+      },
+      is_baby: false,
+      is_mythical: false,
+      gender_rate: responseBase.order,
+      is_legendary: false,
+      capture_rate: responseBase.order,
+      hatch_counter: responseBase.order,
+      base_happiness: responseBase.order,
+      evolution_chain: {
+        url: responseBase.url,
+        order: responseBase.order,
+      },
+      evolves_from_species: {
+        name: responseBase.name,
+        order: responseBase.order,
+      },
+      has_gender_differences: false,
+    };
   }
 }

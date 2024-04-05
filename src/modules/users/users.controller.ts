@@ -11,17 +11,21 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { UsersService } from './users.service';
+import { User } from './user.entity';
+
 import { CreateUserDto } from './dtos/create-user.dto';
 import { ReturnUserDto } from './dtos/return-user.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserDto } from './dtos/update-users.dto';
+import { FindUsersQueryDto } from './dtos/find-users-query.dto';
+
 import { UserRoles } from './user-roles.enum';
+
 import { Role } from '../auth/dto/role.decoretor';
 import { RolesGuard } from '../auth/role.guards';
-import { UpdateUserDto } from './dtos/update-users.dto';
 import { GetUser } from '../auth/get-user.decorator';
-import { User } from './user.entity';
-import { FindUsersQueryDto } from './dtos/find-users-query.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -37,17 +41,17 @@ export class UsersController {
     const user = await this.usersService.createAdminUser(createUserDto);
     return {
       user,
-      message: 'Administrador cadastrado com sucesso',
+      message: 'Administrator successfully registered',
     };
   }
 
   @Get(':id')
   @Role(UserRoles.ADMIN)
-  async findUserById(@Param('id') id): Promise<ReturnUserDto> {
+  async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
     const user = await this.usersService.findUserById(id);
     return {
       user,
-      message: 'Usuário encontrado',
+      message: 'User found',
     };
   }
 
@@ -59,7 +63,7 @@ export class UsersController {
   ) {
     if (user.role != UserRoles.ADMIN && user.id.toString() != id) {
       throw new ForbiddenException(
-        'Você não tem autorização para acessar esse recurso',
+        'You are not authorized to access this feature',
       );
     } else {
       return this.usersService.updateUser(updateUserDto, id);
@@ -71,7 +75,7 @@ export class UsersController {
   async deleteUser(@Param('id') id: string) {
     await this.usersService.deleteUser(id);
     return {
-      message: 'Usuário removido com sucesso',
+      message: 'User removed successfully',
     };
   }
 
@@ -81,7 +85,7 @@ export class UsersController {
     const found = await this.usersService.findUsers(query);
     return {
       found,
-      message: 'Usuários encontrados',
+      message: 'User found',
     };
   }
 }

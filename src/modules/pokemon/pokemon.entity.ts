@@ -10,6 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import type { IResponsePokemon, IResponseSpecie } from '@api/pokemon';
+
 import type { IPokemon } from './pokemon.interface';
 import { Type } from './type';
 import { Stat } from './stat';
@@ -117,4 +119,39 @@ export class Pokemon
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  static responseToEntity(
+    response: IResponsePokemon,
+    responseSpecie: IResponseSpecie,
+  ): Pokemon {
+    const entity = new Pokemon();
+    entity.name = response.name;
+    entity.order = response.order;
+    entity.color = responseSpecie.color.name;
+    entity.height = response.height;
+    entity.weight = response.weight;
+    entity.habitat = responseSpecie.habitat
+      ? responseSpecie.habitat.name
+      : null;
+    entity.is_baby = responseSpecie.is_baby;
+    entity.shape_url = responseSpecie.shape.url;
+    entity.shape_name = responseSpecie.shape.name;
+    entity.is_mythical = responseSpecie.is_mythical;
+    entity.gender_rate = responseSpecie.gender_rate;
+    entity.is_legendary = responseSpecie.is_legendary;
+    entity.capture_rate = responseSpecie.capture_rate;
+    entity.hatch_counter = responseSpecie.hatch_counter;
+    entity.cries_latest = response.cries.latest;
+    entity.cries_legacy = response.cries.legacy;
+    entity.base_happiness = responseSpecie.base_happiness;
+    entity.base_experience = response.base_experience;
+    entity.evolution_chain_url = responseSpecie.evolution_chain.url;
+    entity.evolves_from_species = responseSpecie.evolves_from_species
+      ? responseSpecie.evolves_from_species.name
+      : null;
+    entity.has_gender_differences = responseSpecie.has_gender_differences;
+    entity.location_area_encounters = response.location_area_encounters;
+    entity.createdAt = new Date();
+    return entity;
+  }
 }

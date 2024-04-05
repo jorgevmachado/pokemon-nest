@@ -21,6 +21,7 @@ export abstract class Service<
     const data = response as ObjectLiteral;
     return data as T;
   }
+
   public async save(response: R, find: FindOptionsWhere<T>): Promise<T> {
     await this.repository.save(this.transformBefore(response));
     return await this.repository.findOne({
@@ -54,8 +55,11 @@ export abstract class Service<
     });
   }
 
-  public async create(entity: T): Promise<T> {
-    return await this.repository.save(entity);
+  public async showBy(param: FindOptionsWhere<T>): Promise<T> {
+    return await this.repository.findOne({
+      where: param,
+      relations: this.relations,
+    });
   }
 
   public async paginate(query: BaseQueryParametersDto): Promise<IPaginate<T>> {

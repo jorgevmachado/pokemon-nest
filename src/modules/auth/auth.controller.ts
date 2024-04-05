@@ -1,10 +1,20 @@
-import { Body, Controller, Get, Post, Req, UseGuards, ValidationPipe } from "@nestjs/common";
-import { AuthService } from './auth.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { CreateUserDto } from '../users/dtos/create-user.dto';
-import { CredentialsDto } from "./dto/credentials.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { User } from "../users/user.entity";
-import { GetUser } from "./get-user.decorator";
+import { User } from '../users/user.entity';
+
+import { AuthService } from './auth.service';
+
+import { CredentialsDto } from './dto/credentials.dto';
+import { GetUser } from './get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +26,7 @@ export class AuthController {
   ): Promise<{ message: string }> {
     await this.authService.signUp(createUserDto);
     return {
-      message: 'Cadastro realizado com sucesso',
+      message: 'Registration Completed Successfully!',
     };
   }
 

@@ -6,15 +6,20 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { User } from './user.entity';
-import { UserRoles } from './user-roles.enum';
+
 import { Repository } from 'typeorm';
+
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-import { CredentialsDto } from '../auth/dto/credentials.dto';
+
+import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-users.dto';
 import { FindUsersQueryDto } from './dtos/find-users-query.dto';
+
+import { User } from './user.entity';
+import { UserRoles } from './user-roles.enum';
+
+import { CredentialsDto } from '../auth/dto/credentials.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +30,7 @@ export class UsersService {
 
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password !== createUserDto.passwordConfirmation) {
-      throw new UnprocessableEntityException('As senhas não são iguais');
+      throw new UnprocessableEntityException('Passwords are not the same');
     } else {
       return this.createUser(createUserDto, UserRoles.ADMIN);
     }
@@ -52,11 +57,9 @@ export class UsersService {
       return result;
     } catch (error) {
       if (error.code.toString() === '23505') {
-        throw new ConflictException('Endereço de email já está em uso');
+        throw new ConflictException('Email address is already in use');
       } else {
-        throw new InternalServerErrorException(
-          'Erro ao salvar o usuário no banco de dados',
-        );
+        throw new InternalServerErrorException('Error saving user to database');
       }
     }
   }
@@ -77,7 +80,7 @@ export class UsersService {
   async findUserById(userId: string): Promise<User> {
     const user = await this.repository.findOne({ where: { id: userId } });
 
-    if (!user) throw new NotFoundException('Usuário não encontrado');
+    if (!user) throw new NotFoundException('User not found');
 
     return user;
   }
@@ -93,16 +96,14 @@ export class UsersService {
       await user.save();
       return user;
     } catch (error) {
-      throw new InternalServerErrorException(
-        'Erro ao salvar os dados no banco de dados',
-      );
+      throw new InternalServerErrorException('Error saving data to database');
     }
   }
 
   async deleteUser(userId: string) {
     const result = await this.repository.delete({ id: userId });
     if (result.affected === 0) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
   }
 
@@ -125,11 +126,11 @@ export class UsersService {
     query.where('user.status = :status', { status });
 
     if (email) {
-      query.andWhere('user.email ILIKE :email', { email: `%${email}%` });
+      query.andWhere('user.email LIKE :email', { email: `%${email}%` });
     }
 
     if (name) {
-      query.andWhere('user.name ILIKE :name', { email: `%${name}%` });
+      query.andWhere('user.name LIKE :name', { email: `%${name}%` });
     }
 
     if (role) {
